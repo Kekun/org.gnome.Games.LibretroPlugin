@@ -1,0 +1,57 @@
+{
+    "id": "org.gnome.Games.LibretroPlugin.PicoDrive",
+    "runtime": "org.gnome.Games",
+    "runtime-version": "master",
+    "build-extension": true,
+    "sdk": "org.gnome.Sdk",
+    "tags": ["nightly"],
+    "finish-args": [
+        /* Needed to find the ROMs */
+        "--filesystem=home:ro"
+    ],
+    "build-options" : {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g"
+    },
+    "cleanup": ["/include", "/lib/pkgconfig",
+                "/share/pkgconfig", "/share/aclocal",
+                "/man", "/share/man", "/share/gtk-doc",
+                "*.la", "*.a",
+                "/lib/girepository-1.0",
+                "/share/dbus-1", "/share/doc", "/share/gir-1.0"
+    ],
+    "modules": [
+        {
+            "name": "libretro-picodrive",
+            "no-autogen": true,
+            "rm-configure": true,
+            "make-args": [
+                "--makefile=Makefile.install",
+                "prefix=/app"
+            ],
+            "make-install-args": [
+                "--makefile=Makefile.install",
+                "prefix=/app"
+            ],
+            "post-install": [
+                /* TODO: Send a generic version of that upstream */
+                "mkdir -p /app/lib/libretro/extra.d/PicoDrive",
+                "install -m644 -p picodrive.libretro /app/lib/libretro/extra.d/PicoDrive"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/libretro/picodrive"
+                },
+                {
+                    "type": "file",
+                    "path": "Makefile.install"
+                },
+                {
+                    "type": "file",
+                    "path": "picodrive.libretro"
+                }
+            ]
+        }
+    ]
+}
